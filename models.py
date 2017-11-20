@@ -68,8 +68,8 @@ class NetD1(nn.Module):
         self.ngpu = ngpu
         main = nn.Sequential(
             # input is (n convolutions) x 96 x 96
-            nn.Conv2d(nc, ndf, 4, 2, 1, bias=False)
-            nn.LeakyReLU(nc, ndf, 4, 2, 1, bias=False)
+            nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
+            nn.LeakyReLU(nc, ndf, 4, 2, 1, bias=False),
             # state size. (ndf) x 32 x 32
             nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 2),
