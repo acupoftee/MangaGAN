@@ -56,20 +56,23 @@ class NetG1(nn.Module):
         self.main = main
 
     def forward(self, input):
-        gpu_ids = None
+        # gpu_ids = None
         if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
-            gpu_ids = range(self.ngpu)
-        return nn.parallel.data_parallel(self.main, input, gpu_ids), 0
+            #gpu_ids = range(self.ngpu)
+            output = nn.parallel.data_parallel(self.main, input, gpu_ids), 0
+        else:
+            output = self.main(input)
+        return output
 
 # First discriminator
 class NetD1(nn.Module):
-    def __init__(self, ngpu, nz, nc, ndf, n_extra_layers_g):
+    def __init__(self, ngpu, nz, nc, ndf, n_extra_layers_d):
         super(NetD1, self).__init__()
         self.ngpu = ngpu
         main = nn.Sequential(
             # input is (n convolutions) x 96 x 96
             nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
-            nn.LeakyReLU(nc, ndf, 4, 2, 1, bias=False),
+            nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf) x 32 x 32
             nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 2),
@@ -101,11 +104,13 @@ class NetD1(nn.Module):
         self.main = main
 
     def forward(self, input):
-        gpu_ids = None
+        #gpu_ids = None
         if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
-            gpu_ids = range(self.ngpu)
-        output = nn.parallel.data_parallel(self.main, input, gpu_ids)
-        return output.view(-1, 1)
+            #gpu_ids = range(self.ngpu)
+            output = nn.parallel.data_parallel(self.main, input, range(self.ngpu))
+        else:
+            output = self.main(input)
+        return output.view(-1, 1).squeeze(1)
     
 # second generator including z decoder and fc
 class NetG2(nn.Module):
