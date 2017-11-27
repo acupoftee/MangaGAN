@@ -59,7 +59,7 @@ class NetG1(nn.Module):
         # gpu_ids = None
         if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
             #gpu_ids = range(self.ngpu)
-            output = nn.parallel.data_parallel(self.main, input, gpu_ids), 0
+            output = nn.parallel.data_parallel(self.main, input, range(self.ngpu)), 0
         else:
             output = self.main(input)
         return output
@@ -110,7 +110,7 @@ class NetD1(nn.Module):
             output = nn.parallel.data_parallel(self.main, input, range(self.ngpu))
         else:
             output = self.main(input)
-        return output.view(-1, 1).squeeze(1)
+        return output.view(-1, 1)
     
 # second generator including z decoder and fc
 class NetG2(nn.Module):

@@ -47,7 +47,7 @@ try:
 except OSError:
     pass
 
-opt.manualSeed = random.randint(1, 10_000) # fixed seed
+opt.manualSeed = random.randint(1, 10000) # fixed seed
 random.seed(opt.manualSeed)
 torch.manual_seed(opt.manualSeed)
 
