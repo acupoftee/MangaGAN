@@ -150,7 +150,7 @@ for epoch in range(opt.niter):
             noise.data.copy_(2*(torch.bernoulli(bernoulli_prob)-0.5))
         else:
             noise.data.normal_(0, 1)
-        fake,z_prediction = netG(noise)
+        fake = netG(noise)
         label.data.fill_(fake_label)
         output = netD(fake.detach()) # add ".detach()" to avoid backprop through G
         errD_fake = criterion(output, label)
@@ -181,7 +181,7 @@ for epoch in range(opt.niter):
             # the first 64 samples from the mini-batch are saved.
             vutils.save_image(real_cpu[0:64,:,:,:],
                     '%s/real_samples.png' % opt.outDir, nrow=8)
-            fake,_ = netG(fixed_noise)
+            fake = netG(fixed_noise)
             vutils.save_image(fake.data[0:64,:,:,:],
                     '%s/fake_samples_epoch_%03d.png' % (opt.outDir, epoch), nrow=8)
     if epoch % 1 == 0:
