@@ -100,13 +100,8 @@ ENV/
 # mypy
 .mypy_cache/
 
-SailorMoon.jpg
-SailorMoon2.jpg
+
 anime-faces
 .vscode
-samples
-extraGLayers
-extraGLayersTest2
-results
-secondGan
-trained
+test
+netG.pth
