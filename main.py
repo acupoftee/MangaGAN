@@ -40,31 +40,7 @@ parser.add_argument('--n_extra_layers_d', type=int, default=0, help='number of e
 parser.add_argument('--n_extra_layers_g', type=int, default=1, help='number of extra conv layers in G')
 parser.add_argument('--binary', action='store_true', help='z from bernoulli distribution, with prob=0.5')
 
-# simply prefer this way
-# arg_list = [
-#     '--dataRoot', '/home/jielei/data/danbooru-faces',
-#     '--workers', '12',
-#     '--batchSize', '128',
-#     '--imageSize', '64',
-#     '--nz', '100',
-#     '--ngf', '64',
-#     '--ndf', '64',
-#     '--niter', '80',
-#     '--lr', '0.0002',
-#     '--beta1', '0.5',
-#     '--cuda', 
-#     '--ngpu', '1',
-#     '--netG', '',
-#     '--netD', '',
-#     '--outDir', './results',
-#     '--model', '1',
-#     '--d_labelSmooth', '0.1', # 0.25 from imporved-GAN paper 
-#     '--n_extra_layers_d', '0',
-#     '--n_extra_layers_g', '1', # in the sense that generator should be more powerful
-# ]
-
 opt = parser.parse_args()
-# opt = parser.parse_args(arg_list)
 print(opt)
 
 try:
