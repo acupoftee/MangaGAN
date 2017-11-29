@@ -1,2 +1,2 @@
 # GANime
-creating new anime faces with generative adversarial networks
+Creating new anime faces with generative adversarial networks
