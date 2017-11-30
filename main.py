@@ -16,7 +16,7 @@ from torch.autograd import Variable
 
 ### load project files
 import models
-from models import weights_init
+from models import weights
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataRoot', required=True, help='path to dataset')
@@ -85,12 +85,12 @@ elif opt.model == 2:
     netG = models.NetG2(ngpu, nz, nc, ngf)
     netD = models.NetD2(ngpu, nz, nc, ndf)
 
-netG.apply(weights_init)
+netG.apply(weights)
 if opt.netG != '':
     netG.load_state_dict(torch.load(opt.netG))
 print(netG)
 
-netD.apply(weights_init)
+netD.apply(weights)
 if opt.netD != '':
     netD.load_state_dict(torch.load(opt.netD))
 print(netD)
