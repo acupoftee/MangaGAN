@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.parallel
 
-def weights_init(m):
+def weights(m):
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
         m.weight.data.normal_(0.0, 0.02)
