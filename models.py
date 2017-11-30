@@ -111,50 +111,6 @@ class NetD1(nn.Module):
         output = nn.parallel.data_parallel(self.main, input, gpu_ids)
         return output.view(-1, 1)
 
-
-
-
-class NetD2(nn.Module):
-    def __init__(self, ngpu, nz, nc , ndf):
-        super(NetD2, self).__init__()
-        self.ngpu = ngpu
-        self.convs = nn.Sequential(
-            # input is (nc) x 96 x 96
-            nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf) x 32 x 32
-            nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 2),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*2) x 16 x 16
-            nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 4),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*4) x 8 x 8
-            nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 8),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*8) x 4 x 4
-            nn.Conv2d(ndf * 8, 1024, 4, 1, 0, bias=False),
-            nn.LeakyReLU(inplace=True),
-            nn.Dropout(0.5),
-            # state size. 1024 x 1 x 1
-        )
-        self.fcs = nn.Sequential(
-            nn.Linear(1024, 1024),
-            nn.LeakyReLU(inplace=True),
-            nn.Dropout(0.5),
-            nn.Linear(1024, 1),            
-            nn.Sigmoid()
-            )
-    def forward(self, input):
-        gpu_ids = None
-        if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
-            gpu_ids = range(self.ngpu)
-        output = nn.parallel.data_parallel(self.convs, input, gpu_ids)
-        output = self.fcs(output.view(-1,1024))
-        return output.view(-1, 1)
-
 # with z decoder and fc layers
 class NetG2(nn.Module):
     def __init__(self, ngpu, nz, nc , ngf):
@@ -210,3 +166,44 @@ class NetG2(nn.Module):
         input = input.view(-1,1024,1,1)
         output = nn.parallel.data_parallel(self.convs, input, gpu_ids)
         return output, z_prediction
+
+class NetD2(nn.Module):
+    def __init__(self, ngpu, nz, nc , ndf):
+        super(NetD2, self).__init__()
+        self.ngpu = ngpu
+        self.convs = nn.Sequential(
+            # input is (nc) x 96 x 96
+            nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. (ndf) x 32 x 32
+            nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(ndf * 2),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. (ndf*2) x 16 x 16
+            nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(ndf * 4),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. (ndf*4) x 8 x 8
+            nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(ndf * 8),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. (ndf*8) x 4 x 4
+            nn.Conv2d(ndf * 8, 1024, 4, 1, 0, bias=False),
+            nn.LeakyReLU(inplace=True),
+            nn.Dropout(0.5),
+            # state size. 1024 x 1 x 1
+        )
+        self.fcs = nn.Sequential(
+            nn.Linear(1024, 1024),
+            nn.LeakyReLU(inplace=True),
+            nn.Dropout(0.5),
+            nn.Linear(1024, 1),            
+            nn.Sigmoid()
+            )
+    def forward(self, input):
+        gpu_ids = None
+        if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
+            gpu_ids = range(self.ngpu)
+        output = nn.parallel.data_parallel(self.convs, input, gpu_ids)
+        output = self.fcs(output.view(-1,1024))
+        return output.view(-1, 1)
