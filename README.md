@@ -7,4 +7,4 @@ Fake Sample:
 
 
 Real Sample:
-![](results/realsample.png?raw=true)
+![](results/realsamples.png?raw=true)
