@@ -11,4 +11,5 @@ Real Sample:
 ![](results/realsamples.png?raw=true)
 
 ## TODO
-Make a GUI for this GAN
+1. Clean the dataset even further
+2. Make a fun GUI for this GAN
