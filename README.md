@@ -9,3 +9,6 @@ Fake Sample:
 Real Sample:
 
 ![](results/realsamples.png?raw=true)
+
+## TODO
+Make a GUI for this GAN
